@@ -2,14 +2,16 @@
 SHELL = /bin/sh
 .SUFFIXES: .cc .o
 
+LIBGOMP_HOME=$(LIBGOMP)/src/libgomp/build
+
 LULESH_EXEC = lulesh2.0
 
 MPI_INC = /opt/local/include/openmpi
 MPI_LIB = /opt/local/lib
 
-INCLUDE=-I. -I$(LIBGOMP) -I$(MOGSLIB)/include
+INCLUDE=-I. -I$(LIBGOMP_HOME) -I$(MOGSLIB)/include
 CFLAGS=--std=c++14 -O3 -fopenmp -Wall
-LIBS=-L $(LIBGOMP)/.libs -lgomp -lm
+LIBS=-L $(LIBGOMP_HOME)/.libs -lgomp -lm
 
 SERCXX = g++ -DUSE_MPI=0
 MPICXX = mpig++ -DUSE_MPI=1
@@ -70,6 +72,11 @@ clean:
 	#/bin/rm -f *.o *~ $(OBJECTS)
 	/bin/rm -f mogslib.o
 	/bin/rm -rf *.dSYM
+
+veryclean:
+	/bin/rm -f *.o *~ $(OBJECTS)
+	/bin/rm -rf *.dSYM
+	/bin/rm -rf $(LULESH_EXEC)-*
 
 tar: clean
 	cd .. ; tar cvf lulesh-2.0.tar LULESH-2.0 ; mv lulesh-2.0.tar LULESH-2.0
